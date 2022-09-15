@@ -13,10 +13,10 @@ def main():
         # cursor
         crsr = connection.cursor()
         crsr.execute('''
-		CREATE TABLE emp (
-			product_title nvarchar(500) ,
-			product_link nvarchar(500),
-			price nvarchar(50)
+		CREATE TABLE IF NOT EXISTS emp (
+			product_title  ,
+			product_link ,
+			price x
 			)
                ''')
         category_tags = ["garden","baby","computers","electronics","home","kitchen","pets","grocery","gift-cards","stripbooks","beauty","fashion","mi","office-products","automotive","toys","videogames","instant-video","hpc","sports","diy"]
@@ -28,7 +28,7 @@ def main():
         # keyword = input("Aramak istediğiniz kelimeyi giriniz")
         keyword = "kürek"
         tag_number = 1
-        browser = p.firefox.launch(headless=False,slow_mo=1000)
+        browser = p.firefox.launch()
         page = browser.new_page()
         page.set_default_timeout(30000)
          
@@ -39,6 +39,7 @@ def main():
         page.locator("id=nav-search-submit-text").click()
 
         count=0
+        counter =0
         page.mouse.wheel(0, 15000)
         page.wait_for_timeout(500)
         total_page = int(page.query_selector(".s-pagination-ellipsis+ .s-pagination-disabled").inner_text())
@@ -78,12 +79,14 @@ def main():
                             price= "-"
                         else:
                             price=price.inner_text()
-                        # json.dump({
-                        #     "name"  : name,
-                        #     "link"  : link,
-                        #     "price" : price
-                        # }, outfile)
-                        crsr.execute('INSERT INTO emp VALUES ("{name}", "{link}", "{price}");')
+                        json.dump({
+                            "name"  : name,
+                            "link"  : link,
+                            "price" : price
+                        }, outfile)
+                        crsr.execute("""INSERT INTO emp VALUES (?, ?, ?)""",(name,price,link))
+                        counter = counter +1
+                        print(counter )
                         #print(name)
                         #print(link)
                         #print(price)
