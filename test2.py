@@ -28,7 +28,7 @@ def main():
         # keyword = input("Aramak istediğiniz kelimeyi giriniz")
         keyword = "kürek"
         tag_number = 1
-        browser = p.firefox.launch()
+        browser = p.firefox.launch(headless=False)
         page = browser.new_page()
         page.set_default_timeout(30000)
          
